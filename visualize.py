@@ -43,7 +43,7 @@ plt.figure(figsize=(20, 40))
 
 for i in range(rows * cols):
     plt.subplot(rows, cols, i + 1)
-    plt.imshow(images[i].pixel_array, cmap=plt.cm.gray)  # Assuming grayscale images
+    plt.imshow(images[i].pixel_array, cmap=plt.cm.gray)
     plt.title(f'Image {i+1}', fontsize=25)
     plt.axis('off') 
 plt.show()
@@ -53,10 +53,29 @@ df = pd.read_csv('calc_case_description_test_set.csv')
 patients = df.iloc[:, 0]
 patients = set(patients)
 patients = list(patients)
-patients
+patients.sort()
 # %%
 from pydicom import dcmread
+images = []
+valid_patients = []
 for i in range(len(patients)):
-    if ("P_00906" >= patients[0]):
-        file = r"C:\Users\rishi\Documents\MammogramData\CBIS\**\CBIS-DDSM\Calc-Test_" + patients[0] + "_LEFT_CC/**/**/1-1.dcm"
+    if ("P_00906" >= patients[i]):
+        file = r"C:\Users\rishi\Documents\MammogramData\CBIS\**\CBIS-DDSM\Calc-Test_" + patients[i] + "_LEFT_CC/**/**/1-1.dcm"
+        paths = glob(file)
+        if (len(paths) > 0):
+            data = dcmread(paths[0])
+            images.append(data)
+            valid_patients.append(patients[i])
+print(len(images))
 # %%
+rows = 5
+cols = 7
+
+plt.figure(figsize=(20, 40))
+
+for i in range(rows * cols):
+    plt.subplot(rows, cols, i + 1)
+    plt.imshow(images[i].pixel_array, cmap=plt.cm.gray) 
+    plt.title(valid_patients[i], fontsize=25)
+    plt.axis('off') 
+plt.show()
