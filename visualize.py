@@ -43,7 +43,7 @@ plt.figure(figsize=(20, 40))
 
 for i in range(rows * cols):
     plt.subplot(rows, cols, i + 1)
-    plt.imshow(images[i].pixel_array, cmap=plt.cm.gray)
+    plt.imshow(images[i].pixel_array, cmap=plt.cm.gray)  # Assuming grayscale images
     plt.title(f'Image {i+1}', fontsize=25)
     plt.axis('off') 
 plt.show()
@@ -54,28 +54,34 @@ patients = df.iloc[:, 0]
 patients = set(patients)
 patients = list(patients)
 patients.sort()
+patients
 # %%
 from pydicom import dcmread
 images = []
-valid_patients = []
+labels = []
 for i in range(len(patients)):
     if ("P_00906" >= patients[i]):
         file = r"C:\Users\rishi\Documents\MammogramData\CBIS\**\CBIS-DDSM\Calc-Test_" + patients[i] + "_LEFT_CC/**/**/1-1.dcm"
         paths = glob(file)
+        print(paths)
         if (len(paths) > 0):
             data = dcmread(paths[0])
+            #print(ds1)
             images.append(data)
-            valid_patients.append(patients[i])
+            labels.append(patients[i])
 print(len(images))
 # %%
 rows = 5
 cols = 7
 
 plt.figure(figsize=(20, 40))
+plt.title('LEFT_CC')
 
-for i in range(rows * cols):
+for i in range(rows * cols - 2):
     plt.subplot(rows, cols, i + 1)
-    plt.imshow(images[i].pixel_array, cmap=plt.cm.gray) 
-    plt.title(valid_patients[i], fontsize=25)
+    plt.imshow(images[i].pixel_array, cmap=plt.cm.gray)  # Assuming grayscale images
+    plt.title(patients[i], fontsize=25)
     plt.axis('off') 
+plt.tight_layout()
 plt.show()
+# %%
